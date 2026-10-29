@@ -14,7 +14,26 @@ import kotlin.time.Duration.Companion.milliseconds
 fun main() = runBlocking<Unit> {
 //    appyForLoop()
 //    applyProduce()
-    applyPingPong()
+//    applyPingPong()
+//    applyChannelBuffer()
+    applyTicker()
+}
+
+suspend fun applyChannelBuffer() {
+    coroutineScope {
+        val channel = Channel<Int>(4) // create buffered channel
+        val sender = launch { // launch sender coroutine
+            repeat(10) {
+                println("Sending $it") // print before sending each element
+                channel.send(it) // will suspend when buffer is full
+                println("$it has been sended")
+            }
+        }
+// don't receive anything... just wait....
+        delay(1000)
+        sender.cancel() // cancel sender coroutine
+    }
+
 }
 
 fun appyForLoop() = runBlocking<Unit> {
